@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-from posts.models import Follow, Group, Post
+from posts.models import Group, Post
 from rest_framework import filters, generics, permissions, viewsets
 from rest_framework.pagination import LimitOffsetPagination
 
@@ -42,8 +42,7 @@ class FollowList(generics.ListCreateAPIView):
     search_fields = ('following__username',)
 
     def get_queryset(self):
-        Follows = Follow.objects.filter(user=self.request.user)
-        return Follows
+        return self.request.user.follower.all()
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
